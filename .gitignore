@@ -17,3 +17,5 @@
 # Ignore planning dir.
 /planning
 
+# Ignore secret passwords file.
+config/secrets.yml
