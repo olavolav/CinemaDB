@@ -12,6 +12,19 @@
  *= require_tree .
  */
 
+@import "bootstrap";
+
+h1, h2, h3, h4, h5 {
+  font-family: Georgia;
+  color: #555;
+}
+
+p, a {
+  font-family: "Helvetica Neue Light";
+  font-size: 14px;
+/*  font-weight: 300;*/
+}
+
 .clearfix {
   clear: both;
 }
