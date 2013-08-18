@@ -1,23 +1,26 @@
 <p id="notice"><%= notice %></p>
 
-
-<p>
-  <div class='movie_thumbnail'>
-    <%= image_tag @movie.image_url, :size => '140x200' %>
-    <%# NOTE: image_url is supplied by user, check docs if this is safe! %>
+<div class='row'>
+  <div class='span2'>
+    <div class='movie_thumbnail' style='float: left'>
+      <%= image_tag @movie.image_url, :size => '140x200' %>
+      <%# NOTE: image_url is supplied by user, check docs if this is safe! %>
+    </div>
   </div>
-  <b><%= @movie.title %></b>
-</p>
-
-<p>
-  Year <%= @movie.year %>
-</p>
-
-<p>
-  <b>Description:</b>
-  <%= @movie.description %>
-</p>
-
+  
+  <div class='span8'>
+    <h2><%= @movie.title %></h2>
+    
+    <p>
+      Year <%= @movie.year %>
+    </p>
+    
+    <p>
+      <b>Description:</b>
+      <%= @movie.description %>
+    </p>
+  </div>
+</div>
 
 <%= link_to 'Edit', edit_movie_path(@movie) %> |
 <%= link_to 'Destroy', @movie, method: :delete, data: { confirm: 'Are you sure?' } %> |

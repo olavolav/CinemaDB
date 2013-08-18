@@ -1,14 +1,16 @@
 <div id='movie_index'>
   <% @movies.each do |movie| %>
     <div class='movie'>
-      <div class='movie_thumbnail'>
-        <%= image_tag movie.image_url, :size => '140x200' %>
-        <%# NOTE: image_url is supplied by user, check docs if this is safe! %>
-      </div>
+      <%= link_to movie do %>
+        <div class='movie_thumbnail'>
+          <%= image_tag movie.image_url, :size => '140x200' %>
+          <%# NOTE: image_url is supplied by user, check docs if this is safe! %>
+        </div>
 
-      <div class='movie_title'>
-        <%= link_to movie.title, movie %>
-      </div>
+        <div class='movie_title'>
+          <%= movie.title %>
+        </div>
+      <% end %>
 
     </div>
   <% end %>
