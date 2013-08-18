@@ -1,4 +1,9 @@
-<p id="notice"><%= notice %></p>
+<% if notice %>
+  <div class="alert alert-success">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <%= notice %>
+  </div>
+<% end %>
 
 <div class='row'>
   <div class='span2'>
@@ -12,7 +17,7 @@
     <h2><%= @movie.title %></h2>
     
     <p>
-      Year <%= @movie.year %>
+      <%= @movie.year %>
     </p>
     
     <p>
