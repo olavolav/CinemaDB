@@ -1,0 +1,25 @@
+<h1>All movies</h1>
+
+<div id='movie_index'>
+  <% @movies.each do |movie| %>
+    <div class='movie'>
+      <div class='movie_thumbnail'>
+        <%= image_tag movie.image_url, :size => '140x200' %>
+        <%# NOTE: image_url is supplied by user, check docs if this is safe! %>
+      </div>
+
+      <div class='movie_title'>
+        <%= link_to movie.title, movie %>
+      </div>
+
+      <div class='movie_actions'>
+        <%= link_to 'Edit', edit_movie_path(movie) %>
+        <%= link_to 'Destroy', movie, method: :delete, data: { confirm: 'Are you sure?' } %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<br class='clearfix'/>
+
+<%= link_to 'New Movie', new_movie_path %>

@@ -1,0 +1,23 @@
+// Place all the styles related to the Movies controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.movie {
+  min-width: 19%;
+  float: left;
+  
+  .movie_thumbnail {
+    border: 1px solid #ccc;
+    width: 140px;
+    height: 200px;
+    overflow: hidden;
+    box-shadow: #eee 2px 2px 2px;
+    padding: 0px;
+  }
+
+  .movie_title a {
+    text-decoration: none;
+  }
+  
+}
+
