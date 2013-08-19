@@ -1,13 +1,19 @@
 class Movie < ActiveRecord::Base
-  attr_accessible :description, :image_url, :title, :year
+  attr_accessible :description, :image_url, :title, :year, :category_id
   
   validates_presence_of :title, :image_url
   validates_uniqueness_of :title
-  validate :year_is_valid
+  validate :year_is_valid?
+  validate :category_is_valid?
+  
+  
+  def category
+    return Category.new(category_id)
+  end
   
   private
   
-  def year_is_valid
+  def year_is_valid?
     if year.nil? or year.to_s.strip.blank?
       errors.add(:year, "is empty or invalid")
     elsif year.to_i < 1888
@@ -20,4 +26,10 @@ class Movie < ActiveRecord::Base
     end
   end
   
+  def category_is_valid?
+    unless category.is_valid?
+      errors.add(:category_id, "is not a valid category")
+    end
+  end
+    
 end

@@ -13,4 +13,13 @@ class MovieTest < ActiveSupport::TestCase
     assert_equal false, life_of_pi_2.valid?
   end
   
+  test "should refuse to create a movie with invalid category" do
+    m = movies(:LifeOfPi)
+    m.category_id = -2
+    assert_equal false, m.valid?
+    
+    m.category_id = Category.possible_categories.length
+    assert_equal false, m.valid?
+  end
+  
 end

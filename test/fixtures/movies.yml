@@ -5,3 +5,4 @@ LifeOfPi:
   year: 2012
   description: "The story of an Indian boy named Pi, a zookeeper's son who finds himself in the company of a hyena, zebra, orangutan, and a Bengal tiger after a shipwreck sets them adrift in the Pacific Ocean."
   image_url: "http://localhost:3000/packsho_mgb188538.jpg"
+  category_id: 1
