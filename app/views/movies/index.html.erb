@@ -1,17 +1,26 @@
+<div id='movie_filters'>
+  <div class="btn-group">
+    <button type="button" class="btn" data-toggle="button">All movies</button>
+    <button class="btn">Action</button>
+    <button class="btn">Sci-Fi</button>
+  </div>
+</div>
+
 <div id='movie_index'>
-  <% @movies.each do |movie| %>
+  <%# @movies.each do |movie| %>
+  <% [].each do |movie| %>
     <div class='movie'>
       <%= link_to movie do %>
         <div class='movie_thumbnail'>
           <%= image_tag movie.image_url, :size => '140x200' %>
           <%# NOTE: image_url is supplied by user, check docs if this is safe! %>
         </div>
-
+        
         <div class='movie_title'>
           <%= movie.title %>
         </div>
       <% end %>
-
+      
     </div>
   <% end %>
 </div>
@@ -19,3 +28,21 @@
 <br class='clearfix'/>
 
 <%= link_to 'New Movie', new_movie_path, :class => 'btn btn-primary' %>
+
+
+
+
+<script type="text/template" id="movie_template">
+  <div class='movie'>
+    <a href='movies/{{ id }}'>
+      <div class='movie_thumbnail'>
+        <img src='{{ image_url }}' width='140' height='200'>
+      </div>
+      
+      <div class='movie_title'>
+        {{ title }}
+      </div>
+    </a>
+  </div>
+</script>
+

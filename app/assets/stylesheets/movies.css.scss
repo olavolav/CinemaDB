@@ -2,6 +2,21 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+
+#movie_filters {
+  width: auto;
+  margin: -20px 0px 20px 0px;
+  padding: 10px;
+  background-color: #ddd;
+  
+  ul li {
+    display: inline;
+    margin: 4px 20px 4px 30px;
+  }
+}
+
+
+
 .movie {
   width: 18%;
   padding: 0px 8px 8px 0px;
@@ -19,7 +34,6 @@
 }
 
 .movie_title a {
-  color: #555;
+  color: inherit !important;
   text-decoration: none;
 }
-
