@@ -1,9 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
-one:
-  user_id: 1
+DavidHatesLifeOfPi:
+  user: David
+  movie: LifeOfPi
   score: 1
 
-two:
-  user_id: 1
-  score: 1
+CharlieLikedLifeOfPi:
+  user: Charlie
+  movie: LifeOfPi
+  score: 4

@@ -3,3 +3,8 @@
 David:
   email: 'david@yahoo.com'
   password_digest: 'kdjfgbkajgfckjahgscefkjahsce'
+
+Charlie:
+  email: 'charlie_charlie.charlie@hotmail.com'
+  password_digest: 'kojyjoflhgjFAGYDRHGVDKkdjfg'
+

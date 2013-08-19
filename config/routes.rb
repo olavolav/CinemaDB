@@ -8,6 +8,8 @@ CinemaDB::Application.routes.draw do
   
   resources :movies
   
+  put "ratings/change"
+  
   root :to => 'movies#index', :as => :home
   
 end
