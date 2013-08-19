@@ -1,4 +1,8 @@
 class SessionsController < ApplicationController
+  
+  before_filter :you_need_to_be_logged_in, :only => :destroy
+  
+  
   def new
   end
 
@@ -8,14 +12,12 @@ class SessionsController < ApplicationController
       session[:user_id] = user.id
       redirect_to :home, :notice => "Logged in!"
     else
-      # flash[:notice] = "Invalid email or password"
-      # redirect_to new
       redirect_to :login, :notice => "Invalid email or password"
     end
   end
   
   def destroy
     session[:user_id] = nil
-    redirect_to root_url, :notice => "Logged out!"
+    redirect_to :home
   end
 end
