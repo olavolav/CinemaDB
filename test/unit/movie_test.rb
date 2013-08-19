@@ -10,16 +10,16 @@ class MovieTest < ActiveSupport::TestCase
   test "should refuse to create a movie of the future" do
     life_of_pi_2 = movies(:LifeOfPi)
     life_of_pi_2.year = Time.now.year + 1
-    assert_equal false, life_of_pi_2.valid?
+    assert life_of_pi_2.invalid?
   end
   
   test "should refuse to create a movie with invalid category" do
     m = movies(:LifeOfPi)
     m.category_id = -2
-    assert_equal false, m.valid?
+    assert m.invalid?
     
     m.category_id = Category.possible_categories.length
-    assert_equal false, m.valid?
+    assert m.invalid?
   end
   
 end

@@ -1,6 +1,9 @@
 class Movie < ActiveRecord::Base
   attr_accessible :description, :image_url, :title, :year, :category_id
   
+  has_many :ratings, :dependent => :destroy
+  has_many :users_that_rated, :through => :ratings, :source => :user
+  
   validates_presence_of :title, :image_url
   validates_uniqueness_of :title
   validate :year_is_valid?
@@ -9,6 +12,14 @@ class Movie < ActiveRecord::Base
   
   def category
     return Category.new(category_id)
+  end
+  
+  def average_score
+    # Since the ratings are between 1 and 5, and average of zero indicates
+    # no ratings yet for this movie.
+    avg = self.ratings.average(:score).to_f
+    return nil if avg < 0.5
+    return avg
   end
   
   private
