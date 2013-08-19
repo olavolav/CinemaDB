@@ -22,6 +22,26 @@ class Movie < ActiveRecord::Base
     return avg
   end
   
+  def dynamical_score_class
+    avg = average_score
+    return ( avg.nil? ? nil : avg.round )
+  end
+  
+  # With score_class we mean the rounded average rating between 1 and 5 (or nil for no ratings)
+  # The fn. dynamical_score_class calculates the current value, but to be able to search for
+  # this value efficiently, we need to store the consolidated integer value in the database.
+  # Effectively this also serves as a caching mechanism, which would be needed anyway as the
+  # database grows.
+  def bring_score_class_up_to_date
+    score_class_right_now = self.dynamical_score_class
+    if score_class_right_now != self.score_class
+      logger.debug("Updating score class of Movie '#{title}' to: #{score_class_right_now}")
+      self.score_class = score_class_right_now
+      self.save
+    end
+  end
+  
+  
   private
   
   def year_is_valid?

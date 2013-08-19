@@ -14,6 +14,10 @@
     </p>
     
     <p>
+      <%= score_class_stars(@movie.score_class) %> (<%= pluralize @movie.ratings.count, 'rating' %>)
+    </p>
+    
+    <p>
       <b>Description:</b>
       <%= @movie.description %>
     </p>

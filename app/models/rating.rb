@@ -9,6 +9,11 @@ class Rating < ActiveRecord::Base
   validate :user_exists?
   validate :movie_exists?
   
+  # If the score changed or the Rating is destroyed, check if the rating
+  # class of the movie needs to be updated.
+  after_save :update_rating_class_of_associated_movie
+  after_destroy :update_rating_class_of_associated_movie
+  
   private
   
   def score_is_valid?
@@ -16,7 +21,7 @@ class Rating < ActiveRecord::Base
       errors.add(:score, "is not a valid score")
     end
   end
-
+  
   def user_exists?
     unless ( user_id and User.where(:id => user_id).exists? )
       errors.add(:user_id, "is not a vailid user id")
@@ -27,6 +32,10 @@ class Rating < ActiveRecord::Base
     unless ( movie_id and Movie.where(:id => movie_id).exists? )
       errors.add(:movie_id, "is not a vailid movie id")
     end
+  end
+  
+  def update_rating_class_of_associated_movie
+    movie.check_if_score_class_is_still_up_to_date!
   end
   
 end
