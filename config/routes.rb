@@ -1,7 +1,13 @@
 CinemaDB::Application.routes.draw do
   
-  resources :movies
+  get "logout" => "sessions#destroy", :as => :logout
+  get "login" => "sessions#new", :as => :login
+  get "signup" => "users#new", :as => :signup
   
-  root :to => 'movies#index'
+  resources :sessions
+  
+  resources :movies, :users
+  
+  root :to => 'movies#index', :as => :home
   
 end

@@ -1,0 +1,5 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+David:
+  email: 'david@yahoo.com'
+  password_digest: 'kdjfgbkajgfckjahgscefkjahsce'
