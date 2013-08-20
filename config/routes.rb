@@ -6,6 +6,7 @@ CinemaDB::Application.routes.draw do
   resources :sessions, :only => [:new, :create, :destroy]
   resources :users, :only => [:show, :new, :create]
   
+  get "movies/search"
   resources :movies
   
   put "ratings/change"
