@@ -1,4 +1,16 @@
 class Movie < ActiveRecord::Base
+  include Tire::Model::Search
+  include Tire::Model::Callbacks
+  
+  # Use dynamic mapping, for now
+  # mapping do
+  #   indexes :id,           :index    => :not_analyzed
+  #   indexes :title,        :analyzer => 'snowball', :boost => 100
+  #   indexes :description,  :analyzer => 'snowball'
+  #   indexes :year
+  #   indexes :score_class
+  # end
+  
   attr_accessible :description, :image_url, :title, :year, :category_id
   
   has_many :ratings, :dependent => :destroy
@@ -41,6 +53,30 @@ class Movie < ActiveRecord::Base
     end
   end
   
+  def self.search(contains_string="", in_year=-1, in_category=-1, in_score_class=-1, page=0)
+    tire.search(:load => true) do
+      size 10 # Limit number of records retrieved
+      from page.to_i*10 # Start offset
+      
+      # Convert to usable format
+      t = contains_string.to_s.strip
+      y = in_year.to_i
+      c = in_category.to_i
+      s = in_score_class.to_i
+      
+      # Look for query string
+      unless t.blank?
+        query do
+          string t
+        end
+      end
+      
+      # Apply filters to search query, if corresponding values were supplied
+      filter :query, :match => {:year => y}         if y > 0
+      filter :query, :match => {:category => c}     if c > 0
+      filter :query, :match => {:score_class => s}  if s > 0
+    end
+  end
   
   private
   

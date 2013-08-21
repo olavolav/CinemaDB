@@ -1,0 +1,11 @@
+<h1>Search results (for DEBUG only)</h1>
+
+<p>
+  <%= pluralize @movies.length, 'movie' %> found.
+</p>
+
+<ul>
+  <% @movies.each do |movie| %>
+    <li><%= movie.title %></li>
+  <% end %>
+</ul>

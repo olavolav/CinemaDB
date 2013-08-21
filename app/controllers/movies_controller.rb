@@ -10,6 +10,17 @@ class MoviesController < ApplicationController
     end
   end
 
+  # GET /movies/search
+  # GET /movies/search.json
+  def search
+    @movies = Movie.search(params[:string], params[:year], params[:category], params[:score], params[:page])
+    
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render json: @movies }
+    end
+  end
+
   # GET /movies/1
   # GET /movies/1.json
   def show
