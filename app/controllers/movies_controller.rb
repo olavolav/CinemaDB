@@ -91,4 +91,14 @@ class MoviesController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  def search
+    @movies = Movie.limit(3)
+    
+    respond_to do |format|
+      format.html { redirect_to movies_url }
+      format.json { render :json => @movies }
+    end
+  end
+  
 end

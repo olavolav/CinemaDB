@@ -12,4 +12,6 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require_tree .
+//= require underscore-min
+//= require backbone
+//= require movies
