@@ -1,4 +1,7 @@
 class MoviesController < ApplicationController
+  
+  before_filter :you_need_to_be_logged_in, :except => [:index, :show, :search]  
+  
   # GET /movies
   # GET /movies.json
   def index

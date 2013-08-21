@@ -31,9 +31,9 @@
 
 <br class='clearfix'/>
 
-<%= link_to 'New Movie', new_movie_path, :class => 'btn btn-primary' %>
-
-
+<% if current_user %>
+  <%= link_to 'New Movie', new_movie_path, :class => 'btn btn-primary' %>
+<% end %>
 
 
 <script type="text/template" id="movie_template">
