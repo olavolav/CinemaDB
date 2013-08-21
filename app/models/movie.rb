@@ -53,24 +53,28 @@ class Movie < ActiveRecord::Base
     end
   end
   
-  def self.search(contains_string="", in_year=nil, in_score_class=nil, page=0)
+  def self.search(contains_string="", in_year=-1, in_category=-1, in_score_class=-1, page=0)
     tire.search(:load => true) do
       size 10 # Limit number of records retrieved
       from page.to_i*10 # Start offset
       
-      unless contains_string.to_s.blank?
+      # Convert to usable format
+      t = contains_string.to_s.strip
+      y = in_year.to_i
+      c = in_category.to_i
+      s = in_score_class.to_i
+      
+      # Look for query string
+      unless t.blank?
         query do
-          string contains_string
+          string t
         end
       end
       
-      if in_year.to_i > 0
-        filter :query, :match => {:year => in_year.to_i}
-      end
-      
-      if in_score_class.to_i > 0
-        filter :query, :match => {:score_class => in_score_class.to_i}
-      end
+      # Apply filters to search query, if corresponding values were supplied
+      filter :query, :match => {:year => y}         if y > 0
+      filter :query, :match => {:category => c}     if c > 0
+      filter :query, :match => {:score_class => s}  if s > 0
     end
   end
   
