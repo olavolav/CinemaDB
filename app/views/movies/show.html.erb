@@ -1,7 +1,7 @@
 <div class='row'>
   <div class='span2'>
     <div class='movie_thumbnail' style='float: left'>
-      <%= image_tag @movie.image_url, :size => '140x200' %>
+      <%= image_tag(@movie.image_url, :size => '140x200') unless @movie.image_url.to_s.blank? %>
       <%# NOTE: image_url is supplied by user, check docs if this is safe! %>
     </div>
   </div>

@@ -38,15 +38,21 @@
 
 <script type="text/template" id="movie_template">
   <div class='movie'>
-    <a href='movies/{{ id }}'>
+    <a href='movies/{{= id }}'>
       <div class='movie_thumbnail'>
-        <img src='{{ image_url }}' width='140' height='200'>
+        {{ if(image_url) { }}
+        <img src='{{= image_url }}' width='140' height='200'>
+        {{ } }}
       </div>
       
       <div class='movie_title'>
-        {{ title }}
+        {{= title }}
       </div>
     </a>
+    
+    <div class='movie_score'>
+      {{= star_display(score_class) }}
+    </div>
   </div>
 </script>
 

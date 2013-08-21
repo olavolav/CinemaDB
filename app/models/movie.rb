@@ -16,7 +16,7 @@ class Movie < ActiveRecord::Base
   has_many :ratings, :dependent => :destroy
   has_many :users_that_rated, :through => :ratings, :source => :user
   
-  validates_presence_of :title, :image_url
+  validates_presence_of :title
   validates_uniqueness_of :title
   validate :year_is_valid?
   validate :category_is_valid?

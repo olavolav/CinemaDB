@@ -1,12 +1,25 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
+
+// helper method
+function star_display(score_class) {
+  var result = "";
+  for (var i=0; i<5; i++) {
+    if(score_class > i) { result += "\u2605" }
+    else { result += "\u2606" };
+  }
+  return result;
+}
+
+
 $(document).ready(function(){
-  alert("document ready.");
+  // alert("document ready.");
   
-  // Use Mustache.js style templating such as not to conflict with ERB
+  // Use extended Mustache.js style templating so as not to conflict with ERB
   _.templateSettings = {
-    interpolate : /\{\{(.+?)\}\}/g
+    evaluate: /\{\{(.+?)\}\}/g,
+    interpolate : /\{\{=(.+?)\}\}/g
   };
   
   var Movie = Backbone.Model.extend({
