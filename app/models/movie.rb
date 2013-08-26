@@ -73,7 +73,7 @@ class Movie < ActiveRecord::Base
       
       # Apply filters to search query, if corresponding values were supplied
       filter :query, :match => {:year => y}         if y > 0
-      filter :query, :match => {:category => c}     if c > 0
+      filter :query, :match => {:category_id => c}     if c >= 0
       filter :query, :match => {:score_class => s}  if s > 0
     end
   end

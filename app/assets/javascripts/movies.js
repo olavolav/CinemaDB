@@ -1,7 +1,7 @@
 $(document).ready(function(){
   // alert("document ready.");
   var app = app || {};
-  
+  _.extend(app, Backbone.Events); // to enable observer role of EventDispatcher
   
   // ------------------------ define Movie object ------------------------
   
@@ -15,8 +15,11 @@ $(document).ready(function(){
         category_id: 0,
         image_url: ""
       };
+    },
+    
+    initialize: function() {
+      this.on('change', console.log("Debug: Change in model '"+this.get('title')+"' has occurred."));
     }
-  
   });
   
   
@@ -24,26 +27,40 @@ $(document).ready(function(){
     model: app.Movie,
     url: 'http://localhost:3000/movies/search.json',
     
-    show_count: function() {
-      alert("length of collection: "+this.length);
+    initialize: function() {
+      _.bindAll(this, 'fetch_using_filters');
     },
   
-    fetch_using_current_filter: function() {
-      this.fetch({'async' : false, 'reset' : true, 'data' :
-        { 'year' : 0, 'page' : 0 }
-      });
+    fetch_using_filters: function(query_obj) {
+      // alert("DEBUG: AJAX call to search inteface...");
+      var res = this.fetch({ 'async': false, 'reset': true, 'data': (query_obj || {}) });
+      console.log("Recieved "+res.responseJSON.length+" movies via AJAX.");
     }
   });
-
-
+  
+  
   app.MovieView = Backbone.View.extend({
     tagName: 'div',
     className: 'movie',
     template: _.template( $( '#movie_template' ).html() ),
-  
+    
+    initialize: function() {
+      // this.bind('change', this.render);
+      _.bindAll(this, 'render', 'remove');
+      this.listenTo(this.model, 'change', this.render);
+      this.listenTo(this.model, 'remove', this.remove);
+    },
+    
     render: function() {
+      console.log("DEBUG: rendering '"+this.model.get('title')+"' ...");
       //this.el is what we defined in tagName. use $el to get access to jQuery html() function
       this.$el.html( this.template( this.model.toJSON() ) );
+      return this;
+    },
+    
+    remove: function() {
+      console.log("DEBUG: removing '"+this.model.get('title')+"' ...");
+      this.$el.html("");
       return this;
     }
   });
@@ -59,24 +76,32 @@ $(document).ready(function(){
         'active_value': -1
       };
     },
-    number_of_options: function() {
-      return this.get('labels').length;
-    }// ,
-    //     active_label: function() {
-    //       for(int i=0; i<this.number_of_options(); i++) {
-    //         var item = this.get('labels')[i];
-    //         if(item.value == this.get('active')) {
-    //           return item.name;
-    //         }
-    //       }
-    //       return '(invalid)';
-    //     }
+    initialize: function(attr) {
+      this.set(attr);
+      _.bindAll(this, 'filter_parameters');
+    },
+    filter_parameters: function() {
+      // return [this.get('query_key'), this.get('active_value')];
+      var dict = {};
+      dict[this.get('query_key')] = this.get('active_value');
+      return dict;
+    }  
   });
   
   app.FilterList = Backbone.Collection.extend({
     model: app.Filter,
     initialize: function(list) {
       this.collection = list;
+      _.bindAll(this, 'filter_parameters');
+    },
+    filter_parameters: function() {
+      // collect parameters of all filters for AJAX call later
+      var parameters_list = {};
+      this.each(function(mod) {
+        parameters_list = $.extend(parameters_list, mod.filter_parameters());
+      });
+      // alert("DEBUG: parameters_list = "+JSON.stringify(parameters_list));
+      return parameters_list;
     }
   });
   
@@ -85,13 +110,18 @@ $(document).ready(function(){
     className: 'filter-group',
     template: _.template( $( '#filter_template' ).html() ),
     
+    initialize: function(mod) {
+      this.listenTo(this.model, 'change', this.render);
+    },
+    
     render: function() {
+      // alert("rendering filter "+this.model.get('query_key')+" ...");
       this.$el.html( this.template(this.model.toJSON()) );
       return this;
     },
     
     events: {
-      "click a" : "click_in_filters"
+      "click li" : "click_in_filters"
     },
     
     click_in_filters: function(e) {
@@ -99,7 +129,7 @@ $(document).ready(function(){
       var id = $(e.currentTarget).data("id");
       // alert("click! value = "+id+" and previously it was "+this.model.get('active_value'));
       if(this.model.get('active_value') != id) {
-        alert("launch new filter! (t.b.c.)");
+        this.model.set('active_value', id);
       }
     }
   });
@@ -109,6 +139,9 @@ $(document).ready(function(){
     initialize: function(list) {
       this.collection = list;
       this.render();
+      
+      this.collection.bind("change:active_value", this.filters_have_changed, this);
+      _.bindAll(this, 'filters_have_changed');
     },
 
     // render library by rendering each book in its collection
@@ -125,6 +158,11 @@ $(document).ready(function(){
         model: item
       });
       this.$el.append( filter_view.render().el );
+    },
+    
+    filters_have_changed: function() {
+      // alert("DEBUG: new filter parameters: "+JSON.stringify(this.collection.filter_parameters()));
+      app.trigger('filter_update');
     }
 
   });
@@ -142,11 +180,11 @@ $(document).ready(function(){
     initialize: function(f) {
       // this.filters = f;
       this.collection = new app.MovieList;
-      this.collection.fetch_using_current_filter();
+      this.collection.fetch_using_filters();
       
       
       _.bindAll(this, 'render_movie', 'render');
-      // this.collection.bind('add', this.renderTreeItem);
+      this.collection.bind('reset', this.render);
       // Don't render here
     },
   
@@ -155,7 +193,13 @@ $(document).ready(function(){
     },
   
     render: function() {
-      this.collection.each(this.render_movie);
+      console.log("Collection reset, render function of app view called.");
+      this.$el.html("");
+      if(this.collection.length > 0) {
+        this.collection.each(this.render_movie);
+      } else {
+        this.$el.html("No movies found.");
+      }
       return this;
     },
   
@@ -166,7 +210,30 @@ $(document).ready(function(){
     }
   });
   
+  // ------------------------ define query dispatcher ------------------------
   
+  app.EventDispatcher = Backbone.Model.extend({
+    
+    initialize: function(app_view, filter_section_view) {
+      this.app_section = app_view;
+      this.filter_section = filter_section_view;
+      // this.set("app_section", app_view);
+      // this.set("filter_section", filter_section_view);
+      _.bindAll(this, 'launch_new_query');
+
+      app.bind('filter_update', this.launch_new_query);
+    },
+    
+    launch_new_query: function() {
+      // alert("call to launch_new_query!");
+      var query_search_data = this.filter_section.collection.filter_parameters();
+      // this.app_section.collection.fetch_using_filters( query_search_data );
+      // var query_search_data = this.get("filter_section"); //.collection.filter_parameters();
+      // alert(query_search_data);
+      this.app_section.collection.fetch_using_filters( query_search_data );
+    }
+    
+  });
   
   
   // ------------------------ launch application ------------------------
@@ -175,7 +242,7 @@ $(document).ready(function(){
   var filters = new app.FilterList();
   // Add category filter
   filters.add( new app.Filter({
-    'query_key': 'category_id',
+    'query_key': 'category',
     'labels': [
       {'name': 'All genres', 'value': -1},
       {'name': 'Action', 'value': 0},
@@ -199,20 +266,18 @@ $(document).ready(function(){
   );
   // Add filter according to score class
   filters.add( new app.Filter({
-    'query_key': 'score_class',
+    'query_key': 'score',
     'labels': [
       {'name': 'All scores', 'value': -1},
-      {'name': '4 stars only', 'value': 4},
-      {'name': '5 stars only', 'value': 5}
+      {'name': '3 stars', 'value': 3},
+      {'name': '4 stars', 'value': 4},
+      {'name': '5 stars', 'value': 5}
     ]
     })
   );
   var CinemaFilters = new app.FilterSectionView(filters);
-  
-  // create list of movies
-  // var movies = new app.MovieList;
-  // movies.fetch_using_current_filter();
-  
+    
   var CinemaDB = new app.AppView();
+  var dispatcher = new app.EventDispatcher(CinemaDB, CinemaFilters);
   CinemaDB.render();
 });
