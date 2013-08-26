@@ -1,58 +1,44 @@
-<div id='movie_filters'>
-  <div class="btn-group">
-    <button type="button" class="btn" data-toggle="button">All movies</button>
-    <button class="btn">Action</button>
-    <button class="btn">Sci-Fi</button>
-  </div>
+<div id='movie_filters' class="btn-toolbar">
 </div>
 
 <div id='movie_index'>
-  <%# @movies.each do |movie| %>
-  <% [].each do |movie| %>
-    <div class='movie'>
-      <%= link_to movie do %>
-        <div class='movie_thumbnail'>
-          <%= image_tag movie.image_url, :size => '140x200' %>
-          <%# NOTE: image_url is supplied by user, check docs if this is safe! %>
-        </div>
-        
-        <div class='movie_title'>
-          <%= movie.title %>
-        </div>
-      <% end %>
-
-      <div class='movie_score'>
-        <%= score_class_stars(movie.score_class) %>
-      </div>
-
-    </div>
-  <% end %>
+  <%# Filled dynamically via Backbone.js using the 'search' controller %>
 </div>
 
 <br class='clearfix'/>
+
 
 <% if current_user %>
   <%= link_to 'New Movie', new_movie_path, :class => 'btn btn-primary' %>
 <% end %>
 
 
+
 <script type="text/template" id="movie_template">
-  <div class='movie'>
-    <a href='movies/{{= id }}'>
-      <div class='movie_thumbnail'>
-        {{ if(image_url) { }}
-        <img src='{{= image_url }}' width='140' height='200'>
-        {{ } }}
-      </div>
-      
-      <div class='movie_title'>
-        {{= title }}
-      </div>
-    </a>
-    
-    <div class='movie_score'>
-      {{= star_display(score_class) }}
+  <a href='movies/{{= id }}'>
+    <div class='movie_thumbnail'>
+      {{ if(image_url) { }}
+      <img src='{{= image_url }}' width='140' height='200'>
+      {{ } }}
     </div>
+    
+    <div class='movie_title'>
+      {{= title }}
+    </div>
+  </a>
+  
+  <div class='movie_score'>
+    {{= star_display(score_class) }}
   </div>
 </script>
 
+<script type="text/template" id="filter_template">
+  {{ for(var i=0; i<labels.length; i++) { }}
+    {{ var val = labels[i]['value'] }}
+    {{ var cl = (val == active_value ? "filter active" : "filter" )}}
+    <a href="#" data-id="{{= val }}" class="{{= cl }}">
+      {{= labels[i]['name'] }}
+      <span class="badge">{{= labels[i]['facet_count'] || 0 }}</span>
+    </a>
+  {{ } }}
+</script>

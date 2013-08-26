@@ -16,7 +16,13 @@ class MoviesController < ApplicationController
   # GET /movies/search
   # GET /movies/search.json
   def search
-    @movies = Movie.search(params[:string], params[:year], params[:category], params[:score], params[:page])
+    @movies = Movie.search(
+      params[:string] || "",
+      params[:year] || -1,
+      params[:category] || -1,
+      params[:score] || -1,
+      params[:page] || 0
+    )
     
     respond_to do |format|
       format.html # index.html.erb

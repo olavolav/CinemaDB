@@ -12,6 +12,28 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require underscore-min
-//= require backbone
+//= require ./lib/underscore
+//= require ./lib/backbone
 //= require movies
+
+
+// helper method to display rating
+function star_display(score_class) {
+  var result = "";
+  for (var i=0; i<5; i++) {
+    if(score_class > i) { result += "\u2605" }
+    else { result += "\u2606" };
+  }
+  return result;
+}
+
+
+// Use extended Mustache.js style templating so as not to conflict with ERB
+_.templateSettings = {
+  evaluate: /\{\{(.+?)\}\}/g,
+  interpolate : /\{\{=(.+?)\}\}/g
+};
+
+
+
+
