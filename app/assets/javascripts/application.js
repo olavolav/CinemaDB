@@ -30,10 +30,7 @@ function star_display(score_class) {
 
 // Use extended Mustache.js style templating so as not to conflict with ERB
 _.templateSettings = {
-  evaluate: /\{\{(.+?)\}\}/g,
-  interpolate : /\{\{=(.+?)\}\}/g
+  evaluate:     /\{\{(.+?)\}\}/g,           // {{ console.log('message') }}
+  interpolate : /\{\{=(.+?)\}\}/g,          // {{= name }}
+  escape:       /\{\{\{=([\s\S]+?)\}\}\}/g  // {{{= unsafe_name }}}
 };
-
-
-
-
