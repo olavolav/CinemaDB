@@ -17,6 +17,9 @@
 //= require movies
 
 
+
+ENTER_KEY = 13;
+
 // helper method to display rating
 function star_display(score_class) {
   var result = "";

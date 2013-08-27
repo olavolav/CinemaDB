@@ -210,13 +210,33 @@ $(document).ready(function(){
     }
   });
   
+  // ------------------------ define search bar ------------------------
+  
+  app.Search = Backbone.View.extend({
+    el: $('#filter_search_form'),
+    initialize: function() {
+      _.bindAll(this, 'trigger_on_enter', 'filter_parameters');
+    },
+    events: {"keypress": "trigger_on_enter"},
+    trigger_on_enter: function(e) {
+      if(e.which === ENTER_KEY) {
+        e.preventDefault();
+        app.trigger('filter_update');
+      }
+    },
+    filter_parameters: function() {
+      return { 'string': this.$el.find('input').val() };
+    }
+  });
+  
   // ------------------------ define query dispatcher ------------------------
   
   app.EventDispatcher = Backbone.Model.extend({
     
-    initialize: function(app_view, filter_section_view) {
+    initialize: function(app_view, filter_section_view, search_view) {
       this.app_section = app_view;
       this.filter_section = filter_section_view;
+      this.search_section = search_view;
       // this.set("app_section", app_view);
       // this.set("filter_section", filter_section_view);
       _.bindAll(this, 'launch_new_query');
@@ -230,6 +250,8 @@ $(document).ready(function(){
       // this.app_section.collection.fetch_using_filters( query_search_data );
       // var query_search_data = this.get("filter_section"); //.collection.filter_parameters();
       // alert(query_search_data);
+      query_search_data = $.extend(query_search_data, this.search_section.filter_parameters());
+      console.log("DEBUG: JSON query = "+JSON.stringify(query_search_data));
       this.app_section.collection.fetch_using_filters( query_search_data );
     }
     
@@ -278,6 +300,7 @@ $(document).ready(function(){
   var CinemaFilters = new app.FilterSectionView(filters);
     
   var CinemaDB = new app.AppView();
-  var dispatcher = new app.EventDispatcher(CinemaDB, CinemaFilters);
+  var SearchBar = new app.Search();
+  var dispatcher = new app.EventDispatcher(CinemaDB, CinemaFilters, SearchBar);
   CinemaDB.render();
 });
