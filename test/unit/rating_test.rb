@@ -2,6 +2,8 @@ require 'test_helper'
 
 class RatingTest < ActiveSupport::TestCase
   
+  # teardown :reset_elasticsearch_db
+  
   test "should create a valid rating" do
     r = Rating.new
     r.movie = movies(:StarWars)

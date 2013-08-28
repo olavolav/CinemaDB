@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
+  
+  # teardown :reset_elasticsearch_db
 
   test "should create a user object" do
     user = users(:David)

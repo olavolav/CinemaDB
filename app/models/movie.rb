@@ -1,6 +1,7 @@
 class Movie < ActiveRecord::Base
   include Tire::Model::Search
   include Tire::Model::Callbacks
+  index_name "#{Tire::Model::Search.index_prefix}movies"
   
   # Use dynamic mapping, for now
   # mapping do

@@ -13,4 +13,15 @@ class ActiveSupport::TestCase
     session[:user_id] = users(username).id
   end
   
+  def reset_elasticsearch_db
+    Movie.index.delete
+    Movie.tire.index.create(:mappings => Movie.tire.mapping_to_hash, :settings => Movie.tire.settings)
+    # Update all movies in fixtures such that they are actually in elasticsearch
+    Movie.all.each do |m|
+      m.touch
+      m.save
+    end
+    Movie.tire.index.refresh
+  end
+  
 end

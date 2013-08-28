@@ -5,7 +5,8 @@ class RatingsControllerTest < ActionController::TestCase
   setup do
     @rating = ratings(:DavidHatesLifeOfPi)
   end
-  
+    
+  # teardown :reset_elasticsearch_db
   
   test "should create a rating" do
     login_as :Charlie

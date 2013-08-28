@@ -35,7 +35,7 @@ class Rating < ActiveRecord::Base
   end
   
   def update_rating_class_of_associated_movie
-    movie.check_if_score_class_is_still_up_to_date!
+    movie.bring_score_class_up_to_date
   end
   
 end
