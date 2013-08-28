@@ -66,27 +66,73 @@ class Movie < ActiveRecord::Base
       s = in_score_class.to_i
       
       # Look for query string
-      unless t.blank?
+      # unless t.blank?
+      #   query do
+      #     string t
+      #     match :year, y
+      #   end
+      # end
+      
+      # query do
+      #   filtered do
+      #     unless t.blank?
+      #       query do
+      #         string t
+      #       end
+      #     end
+      #     filter :query, :match => {:year => y}         if y > 0
+      #     filter :query, :match => {:category_id => c}  if c >= 0
+      #     filter :query, :match => {:score_class => s}  if s > 0
+      #   end
+      # end
+      
+      # http://stackoverflow.com/questions/9895941/facet-troubles-with-elasticsearch-on-query?rq=1
+      # query do
+      #   boolean do
+      #     must { string t } unless t.blank?
+      #     # unless t.blank?
+      #     #   must { string t } # unless t.blank?
+      #     # end
+      #     # must { string "" }
+      #     must { terms :year, y } if y > 0
+      #     must { terms :category_id, c } if c >= 0
+      #     must { terms :score_class, s } if s > 0
+      #   end
+      # end
+      
+      unless t.blank? and y<=0 and c<0 and s<=0
         query do
-          string t
+          string(t) unless t.blank?
+          match(:year, y) if y > 0
+          match(:category_id, c) if c >= 0
+          match(:score_class, s) if s > 0
         end
       end
       
+      # if y > 0
+      #   query do
+      #     match :year, y
+      #   end
+      # end
+      
       # Apply filters to search query, if corresponding values were supplied
-      filter :query, :match => {:year => y}         if y > 0
-      filter :query, :match => {:category_id => c}  if c >= 0
-      filter :query, :match => {:score_class => s}  if s > 0
+      # filter :query, :match => {:year => y}         if y > 0
+      # filter :query, :match => {:category_id => c}  if c >= 0
+      # filter :query, :match => {:score_class => s}  if s > 0
       
       # Define facet counts that we are interested in for the front-end
-      facet 'current_years' do
+      facet 'current_year' do
         terms :year
       end
-      facet 'current_categories' do
+      facet 'current_category' do
         terms :category_id
       end
-      facet 'current_scores' do
+      facet 'current_score' do
         terms :score_class
       end
+      # facet 'filtered' do
+      #   filter :year, :year => y
+      # end
     end
   end
   

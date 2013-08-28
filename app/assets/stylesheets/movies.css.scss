@@ -18,12 +18,12 @@
 }
 
 .filter {
-  display: inline;
+  display: inline-block;
   color: inherit;
   cursor: pointer;
   margin-right: 1em;
   padding: 4px;
-  width: 27%;
+  min-width: 8%;
   border-radius: 4px;
   color: #999;
   
@@ -37,7 +37,7 @@
     color: inherit;
     
     .badge {
-      background-color: #999;
+      background-color: #9d9d9d;
     }
   }
   

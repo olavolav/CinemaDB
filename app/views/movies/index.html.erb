@@ -42,7 +42,9 @@
     {{ var cl = (val == active_value ? "filter active" : "filter" )}}
     <li data-id="{{{= val }}}" class="{{{= cl }}}">
       {{{= labels[i]['name'] }}}
-      <span class="badge">{{{= labels[i]['facet_count'] || 0 }}}</span>
+      {{ if(active_value<0 && i>0) { }}
+        <span class="badge">{{{= labels[i]['facet_count'] || 0 }}}</span>
+      {{ } }}
     </li>
   {{ } }}
 </script>

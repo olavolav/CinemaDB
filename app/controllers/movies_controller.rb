@@ -26,7 +26,7 @@ class MoviesController < ApplicationController
     
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @movies }
+      format.json { render json: {:results => @movies.results, :facets => @movies.facets} }
     end
   end
 
