@@ -73,8 +73,19 @@ class Movie < ActiveRecord::Base
       
       # Apply filters to search query, if corresponding values were supplied
       filter :query, :match => {:year => y}         if y > 0
-      filter :query, :match => {:category_id => c}     if c >= 0
+      filter :query, :match => {:category_id => c}  if c >= 0
       filter :query, :match => {:score_class => s}  if s > 0
+      
+      # Define facet counts that we are interested in for the front-end
+      facet 'current_years' do
+        terms :year
+      end
+      facet 'current_categories' do
+        terms :category_id
+      end
+      facet 'current_scores' do
+        terms :score_class
+      end
     end
   end
   
