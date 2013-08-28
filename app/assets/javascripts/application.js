@@ -19,6 +19,7 @@
 
 
 ENTER_KEY = 13;
+ITEMS_PER_PAGE = 10;
 
 // helper method to display rating
 function star_display(score_class) {

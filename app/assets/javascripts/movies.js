@@ -123,6 +123,12 @@ $(document).ready(function(){
         var f_here = facets['current_'+query_key];
         var filter = this.findWhere({'query_key': query_key});
         if(f_here != undefined) {
+          // First, update page count for paginator
+          if(query_key === 'category') { // since we do not allow an unset category
+            var total_hits = f_here['total'];
+            app.trigger('got_new_total_hits_count', total_hits);
+          }
+          
           var labels = filter.get("labels");
           // First reset all labels (since facets with count 0 are not included in the response
           for(var k=0; k<labels.length; k++) {
@@ -205,7 +211,7 @@ $(document).ready(function(){
     
     filters_have_changed: function() {
       // alert("DEBUG: new filter parameters: "+JSON.stringify(this.collection.filter_parameters()));
-      app.trigger('filter_update');
+      app.trigger('filter_update', true);
     }
 
   });
@@ -214,11 +220,6 @@ $(document).ready(function(){
   
   app.AppView = Backbone.View.extend({
     el: $("#movie_index"),
-  
-    events: {
-      "click #btn-next-page": "goto_next_page",
-      "click #btn-prev-page": "goto_next_page"
-    },
   
     initialize: function(f) {
       // this.filters = f;
@@ -257,6 +258,10 @@ $(document).ready(function(){
   
   app.Search = Backbone.View.extend({
     el: $('#filter_search_form'),
+    tagName: 'ul',
+    className: 'filter-group',
+    template: _.template( $( '#filter_template' ).html() ),
+    
     initialize: function() {
       _.bindAll(this, 'trigger_on_enter', 'filter_parameters');
     },
@@ -265,33 +270,106 @@ $(document).ready(function(){
       if(e.which === ENTER_KEY) {
         e.preventDefault();
         this.$el.find('input').blur();
-        app.trigger('filter_update');
+        app.trigger('filter_update', true);
       }
     },
     filter_parameters: function() {
       return { 'string': this.$el.find('input').val() };
     }
   });
+
+  // ------------------------ define pagination bar ------------------------
+  
+  app.Paginator = Backbone.Model.extend({
+    defaults: function() {
+      return {
+        number_of_pages: 0,
+        current_page: 0
+      }
+    },
+    initialize: function() {
+      _.bindAll(this, 'new_total_hits_count');
+      app.bind('got_new_total_hits_count', this.new_total_hits_count);
+    },
+    new_total_hits_count: function(nr_of_hits) {
+      // alert("DEBUG: new_total_hits_count = "+nr_of_hits);
+      this.set("number_of_pages", Math.floor(nr_of_hits / 10) + 1);
+      if(this.get("current_page") >= this.get("number_of_pages")) {
+        this.set("current_page", 0); // slight HACK
+      }
+    }
+  })
+  
+  app.PaginatorView = Backbone.View.extend({
+    el: $('#pagination-list'),
+    template: _.template( $( '#paginator_template' ).html() ),
+    
+    initialize: function(mod) {
+      this.model = new app.Paginator;
+      _.bindAll(this, 'click_in_paginator', 'render', 'filter_parameters');
+      this.listenTo(this.model, 'change', this.render);
+      this.render();
+    },
+    
+    events: {"click li" : "click_in_paginator"},
+    
+    click_in_paginator: function(e) {
+      e.preventDefault();
+      var a_change_occurred = false;
+      // get value (= DOM id) of clicked filter
+      var id = $(e.currentTarget).data("id");
+      // alert("DEBUG: id = "+id);
+      if(id === "previous") {
+        this.model.set('current_page', this.model.get('current_page') - 1);
+        a_change_occurred = true;
+      } else if(id === "next") {
+        this.model.set('current_page', this.model.get('current_page') + 1);
+        a_change_occurred = true;
+      } else if(parseInt(id) != this.model.get('current_page')) {
+        this.model.set('current_page', parseInt(id));
+        a_change_occurred = true;
+      }
+      
+      if(a_change_occurred) {
+        app.trigger('filter_update', false);
+      }
+    },
+    
+    render: function() {
+      this.$el.html( this.template( this.model.toJSON() ) );
+      return this;
+    },
+    
+    filter_parameters: function() {
+      return { 'page': this.model.get('current_page') };
+    }
+  })
   
   // ------------------------ define query dispatcher ------------------------
   
   app.EventDispatcher = Backbone.Model.extend({
     
-    initialize: function(app_view, filter_section_view, search_view) {
+    initialize: function(app_view, filter_section_view, search_view, pagination_view) {
       this.app_section = app_view;
       this.filter_section = filter_section_view;
       this.search_section = search_view;
-      // this.set("app_section", app_view);
-      // this.set("filter_section", filter_section_view);
+      this.pagination_section = pagination_view;
       _.bindAll(this, 'launch_new_query');
 
       app.bind('filter_update', this.launch_new_query);
     },
     
-    launch_new_query: function() {
+    launch_new_query: function(reset_page_count) {
       // alert("call to launch_new_query!");
+      // Get parameters from filter section
       var query_search_data = this.filter_section.collection.filter_parameters();
+      // Get parameters from search field
       query_search_data = $.extend(query_search_data, this.search_section.filter_parameters());
+      // Get parameters from pagination
+      if(!reset_page_count) {
+        query_search_data = $.extend(query_search_data, this.pagination_section.filter_parameters());
+      }
+      
       console.log("DEBUG: JSON query = "+JSON.stringify(query_search_data));
       this.app_section.collection.fetch_using_filters( query_search_data );
     }
@@ -338,10 +416,11 @@ $(document).ready(function(){
     ]
     })
   );
+  var PageBar = new app.PaginatorView();
   var CinemaFilters = new app.FilterSectionView(filters);
     
   var CinemaDB = new app.AppView();
   var SearchBar = new app.Search();
-  var dispatcher = new app.EventDispatcher(CinemaDB, CinemaFilters, SearchBar);
+  var dispatcher = new app.EventDispatcher(CinemaDB, CinemaFilters, SearchBar, PageBar);
   CinemaDB.render();
 });

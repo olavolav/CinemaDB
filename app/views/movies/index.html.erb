@@ -16,6 +16,11 @@
   <%= link_to 'New Movie', new_movie_path, :class => 'btn btn-primary' %>
 <% end %>
 
+<div class="pagination">
+  <ul id='pagination-list'>
+    <%# Filled dynamically via Backbone.js %>
+  </ul>
+</div>
 
 
 <script type="text/template" id="movie_template">
@@ -47,4 +52,15 @@
       {{ } }}
     </li>
   {{ } }}
+</script>
+
+<script type="text/template" id="paginator_template">
+  {{ var c = (current_page > 0 ? "" : "disabled"); }}
+  <li data-id="previous" class={{= c }}><a href="#">Prev</a></li>
+  {{ for(var i=0; i<number_of_pages; i++) { }}
+    {{ var c = (current_page === i ? "active" : ""); }}
+    <li data-id={{= i }} class={{= c }}><a href="#">{{= i+1 }}</a></li>
+  {{ } }}
+  {{ var c = (current_page < number_of_pages-1 ? "" : "disabled"); }}
+  <li data-id="next" class={{= c }}><a href="#">Next</a></li>
 </script>
