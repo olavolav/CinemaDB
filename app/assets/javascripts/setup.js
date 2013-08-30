@@ -5,8 +5,10 @@ ITEMS_PER_PAGE = 10;
 function star_display(score_class) {
   var result = "";
   for (var i=0; i<5; i++) {
+    result += "<span data-id='"+(i+1)+"'>";
     if(score_class > i) { result += "\u2605" }
     else { result += "\u2606" };
+    result += "</span>";
   }
   return result;
 }

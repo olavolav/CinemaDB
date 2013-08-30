@@ -24,9 +24,19 @@ class MoviesController < ApplicationController
       params[:page] || 0
     )
     
+    if current_user
+      @your_scores = current_user.collected_ratings(@movies.results)
+    end
+    
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: {:results => @movies.results, :facets => @movies.facets} }
+      format.json do
+        render json: {
+          :results => @movies.results,
+          :facets => @movies.facets,
+          :your_scores => @your_scores
+        }
+      end
     end
   end
 

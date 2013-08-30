@@ -8,4 +8,10 @@ class User < ActiveRecord::Base
   
   validates_presence_of :password, :on => :create
   validates_uniqueness_of :email
+  
+  def collected_ratings(movies)
+    r = Rating.where(:user_id => id, :movie_id => movies.to_a).select([:movie_id, :score])
+    return r.collect{ |ra| ra.attributes }
+  end
+  
 end

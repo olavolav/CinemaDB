@@ -22,7 +22,7 @@ class UsersController < ApplicationController
     if @user.save
       # When creating a valid user, we have you logged in automatically
       session[:user_id] = @user.id
-      redirect_to root_url, :notice => "Signed up!"
+      redirect_to root_url #, :notice => "Signed up!"
     else
       render "new"
     end
