@@ -54,7 +54,7 @@
   vertical-align: top;
   
   .your_score {
-    color: #468847;
+    color: #F89406;
   }
 }
 
@@ -66,18 +66,22 @@
   unicode-bidi: bidi-override;
   direction: rtl;
   text-align: left;
+  
+  > span {
+    display: inline-block;
+    position: relative;
+    width: 1.1em;
+    cursor: pointer;
+  }
 }
-.movie_score > span {
-  display: inline-block;
-  position: relative;
-  width: 1.1em;
-  cursor: pointer;
-}
+
 .movie_score > span:hover:before,
 .movie_score > span:hover ~ span:before {
    content: "\2605";
    position: absolute;
-   top: 0; left: 0;
+   top: 0;
+   left: 0;
+   color: #B94A48;
 }
 
 .movie_thumbnail {

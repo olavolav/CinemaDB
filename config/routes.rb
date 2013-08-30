@@ -9,7 +9,7 @@ CinemaDB::Application.routes.draw do
   get "movies/search"
   resources :movies
   
-  put "ratings/change"
+  put "ratings/update"
   
   root :to => 'movies#index', :as => :home
   

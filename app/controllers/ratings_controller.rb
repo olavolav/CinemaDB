@@ -3,7 +3,7 @@ class RatingsController < ApplicationController
   # This filter is now handeled inside of the change controller
   # before_filter :you_need_to_be_logged_in
   
-  def change
+  def update
     movie_id = params[:movie].to_i
     score = params[:score].to_i
     

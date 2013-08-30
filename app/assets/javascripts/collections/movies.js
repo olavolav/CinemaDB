@@ -17,11 +17,13 @@ app.MovieList = Backbone.Collection.extend({
     
     // Updating personal scores
     var your_scores = AJAXquery.responseJSON['your_scores'];
-    console.log("Recieved "+your_scores.length+" personal score(s) via AJAX.");
-    for(var i=0; i<your_scores.length; i++) {
-      var movie = this.findWhere({'id': your_scores[i]['movie_id']});
-      // alert("DEBUG: Found a score for movie '"+movie.get('title')+"': "+your_scores[i]['score']);
-      movie.set('your_score_class', your_scores[i]['score']);
+    if(your_scores != undefined) {
+      console.log("Recieved "+your_scores.length+" personal score(s) via AJAX.");
+      for(var i=0; i<your_scores.length; i++) {
+        var movie = this.findWhere({'id': your_scores[i]['movie_id']});
+        // alert("DEBUG: Found a score for movie '"+movie.get('title')+"': "+your_scores[i]['score']);
+        movie.set('your_score_class', your_scores[i]['score']);
+      }
     }
     
     // Updating facet counts
