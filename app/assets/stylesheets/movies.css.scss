@@ -55,11 +55,29 @@
   
   .your_score {
     color: #468847;
-    
-    &:after {
-      content: " (you)";
-    }
   }
+}
+
+/* Here we allow for the standard hover effect ofer stars
+   Reference for the directional override hack:
+   http://css-tricks.com/star-ratings/
+*/
+.movie_score {
+  unicode-bidi: bidi-override;
+  direction: rtl;
+  text-align: left;
+}
+.movie_score > span {
+  display: inline-block;
+  position: relative;
+  width: 1.1em;
+  cursor: pointer;
+}
+.movie_score > span:hover:before,
+.movie_score > span:hover ~ span:before {
+   content: "\2605";
+   position: absolute;
+   top: 0; left: 0;
 }
 
 .movie_thumbnail {

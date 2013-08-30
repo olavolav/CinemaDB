@@ -38,11 +38,11 @@
   
   {{ if(your_score_class > 0) { }}
     <div class='movie_score your_score'>
-      {{= star_display(your_score_class) }}
+      {{= star_display_reverse(your_score_class) }}
     </div>
   {{ } else { }}
     <div class='movie_score'>
-      {{= star_display(score_class) }}
+      {{= star_display_reverse(score_class) }}
     </div>
   {{ } }}
 </script>
