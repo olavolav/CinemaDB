@@ -64,3 +64,54 @@
   {{ var c = (current_page < number_of_pages-1 ? "" : "disabled"); }}
   <li data-id="next" class={{= c }}><a href="#">Next</a></li>
 </script>
+
+<%= javascript_include_tag "application" %>
+
+<script>
+  // ------------------------ launch application ------------------------
+
+  // set up filters (since they are fixed)
+  var filters = new app.FilterList();
+  // Add category filter
+  filters.add( new app.Filter({
+    'query_key': 'category',
+    'labels': [
+      {'name': 'All genres', 'value': -1},
+      {'name': 'Action', 'value': 0},
+      {'name': 'Drama', 'value': 1},
+      {'name': 'Fantasy/Sci-Fi', 'value': 2},
+      {'name': 'Comedy', 'value': 3},
+      {'name': 'Horror', 'value': 4}
+    ]
+    })
+  );
+  // Add filter according to year of release
+  filters.add( new app.Filter({
+    'query_key': 'year',
+    'labels': [
+      {'name': 'All years', 'value': -1},
+      {'name': '2011', 'value': 2011},
+      {'name': '2012', 'value': 2012},
+      {'name': '2013', 'value': 2013}
+    ]
+    })
+  );
+  // Add filter according to score class
+  filters.add( new app.Filter({
+    'query_key': 'score',
+    'labels': [
+      {'name': 'All scores', 'value': -1},
+      {'name': '3 stars', 'value': 3},
+      {'name': '4 stars', 'value': 4},
+      {'name': '5 stars', 'value': 5}
+    ]
+    })
+  );
+  var PageBar = new app.PaginatorView();
+  var CinemaFilters = new app.FilterSectionView(filters);
+  
+  var CinemaDB = new app.AppView();
+  var SearchBar = new app.Search();
+  var Dispatcher = new app.EventDispatcher(CinemaDB, CinemaFilters, SearchBar, PageBar);
+  CinemaDB.render();
+</script>
