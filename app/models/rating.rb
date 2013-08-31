@@ -14,6 +14,14 @@ class Rating < ActiveRecord::Base
   after_save :update_rating_class_of_associated_movie
   after_destroy :update_rating_class_of_associated_movie
   
+  def to_i
+    return score
+  end
+  
+  def to_f
+    return score.to_f
+  end
+  
   private
   
   def score_is_valid?

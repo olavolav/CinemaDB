@@ -27,14 +27,7 @@ class MovieTest < ActiveSupport::TestCase
   end
   
   test "should search using elasticsearch" do
-    # puts Movie.count
-    # m = movies(:LifeOfPi)
-    # m.touch
-    # m.save
-    # Movie.index.refresh
     s = Movie.search("tiger") # should only yield 'Life of Pi'
-    # puts Movie.search().results.inspect
-    # puts s.results.inspect
     assert_equal 1, s.results.length
   end
   

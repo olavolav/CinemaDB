@@ -23,11 +23,12 @@ class RatingsController < ApplicationController
       rating.score = score
     
       unless rating.save
+        invalid_rating = true
         logger.warn "Invalid change rating request."
       end
     
       # Here we do not give a response, since doing so would reveal which user ids exist
-      render :nothing => true, :status => :ok
+      render :nothing => true, :status => (invalid_rating ? :bad_request : :ok)
     end
   end
   
