@@ -1,11 +1,12 @@
 require 'test_helper'
 
 class MoviesControllerTest < ActionController::TestCase
+  
   setup do
     @movie = movies(:LifeOfPi)
   end
   
-  # teardown :reset_elasticsearch_db
+  teardown :reset_elasticsearch_db
   
   test "should get index" do
     get :index
@@ -50,7 +51,36 @@ class MoviesControllerTest < ActionController::TestCase
     assert_difference('Movie.count', -1) do
       delete :destroy, id: @movie
     end
-
+    
     assert_redirected_to movies_path
   end
+
+  test "should get list of movies using elasticsearch via HTML" do
+    get :search
+    assert assigns(:movies)
+    assert_response :success
+  end
+
+  test "should get list of movies using elasticsearch via JSON" do
+    get :search, :format => :json
+    response = JSON.parse(@response.body)
+    
+    assert_equal [10, Movie.count].min, response['results'].length, "Should return all movies"
+    assert_response :success
+  end
+  
+  test "should search for movies using elasticsearch" do
+    get :search, {:string => "Life", :year => 2012, :format => :json}
+    response = JSON.parse(@response.body)
+    assert_equal 1, response['results'].length, "Should return only 'Life of Pi'"
+    assert_response :success
+  end
+
+  test "should search for movies and ignore invalid arguments" do
+    get :search, {:string => "Life", :year => '-12dsade', :category => 'hello', :format => :json}
+    response = JSON.parse(@response.body)
+    assert_equal 1, response['results'].length, "Should return only 'Life of Pi'"
+    assert_response :success
+  end
+  
 end

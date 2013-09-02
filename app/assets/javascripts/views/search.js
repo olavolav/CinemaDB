@@ -8,14 +8,13 @@ app.Search = Backbone.View.extend({
     _.bindAll(this, 'trigger_on_enter', 'filter_parameters');
   },
   
-  events: {"keypress": "trigger_on_enter"},
+  events: {"submit": "trigger_on_enter"},
   
   trigger_on_enter: function(e) {
-    if(e.which === ENTER_KEY) {
-      e.preventDefault();
-      this.$el.find('input').blur();
-      app.trigger('filter_update', true);
-    }
+    // if(e.which === ENTER_KEY) {
+    e.preventDefault();
+    this.$el.find('input').blur();
+    app.trigger('filter_update', true);
   },
   
   filter_parameters: function() {

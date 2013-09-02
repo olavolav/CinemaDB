@@ -21,4 +21,12 @@ end
 
 gem 'jquery-rails'
 
+group :test do
+  # to enable JavaScript testing
+  gem 'capybara'
+  gem 'selenium-webdriver'
+  # gem 'poltergeist' # alternative, headless driver
+  gem 'launchy'
+end
+
 gem 'bcrypt-ruby', '~> 3.0.0'

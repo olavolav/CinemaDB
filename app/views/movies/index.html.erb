@@ -1,6 +1,6 @@
 <div id='movie_filters' class='well'>
   <form id="filter_search_form">
-    <input type="text" class="input-medium search-query" placeholder="Search...">
+    <input type="text" class="input-medium search-query" id="search_filter_input" placeholder="Search...">
   </form>
   <%# Filled dynamically via Backbone.js %>
 </div>
@@ -51,7 +51,7 @@
   {{ for(var i=0; i<labels.length; i++) { }}
     {{ var val = labels[i]['value'] }}
     {{ var cl = (val == active_value ? "filter active" : "filter" )}}
-    <li data-id="{{{= val }}}" class="{{{= cl }}}">
+    <li data-key="{{{= query_key }}}" data-id="{{{= val }}}" class="{{{= cl }}}">
       {{{= labels[i]['name'] }}}
       {{ if(active_value<0 && i>0) { }}
         <span class="badge">{{{= labels[i]['facet_count'] || 0 }}}</span>
