@@ -24,7 +24,6 @@ class RatingTest < ActiveSupport::TestCase
     movie.reload # refresh movie from db
     sum = ratings.inject(0.0) { |result, r| result + r.to_f }
     supposed_rating = (sum / ratings.size).round
-    assert_equal supposed_rating, movie.dynamical_score_class, "Should yield dynamical score_class"
     assert_equal supposed_rating, movie.score_class, "Should have computed the score_class"
   end
   

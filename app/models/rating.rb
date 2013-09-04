@@ -42,8 +42,10 @@ class Rating < ActiveRecord::Base
     end
   end
   
+  private
+  
   def update_rating_class_of_associated_movie
-    movie.bring_score_class_up_to_date
+    movie.bring_score_class_up_to_date!
   end
   
 end

@@ -24,28 +24,26 @@ class Movie < ActiveRecord::Base
   
   
   def category
-    return Category.new(category_id)
+    return ( @category_object ||= Category.new(category_id) )
   end
   
-  def average_score
-    # Since the ratings are between 1 and 5, and average of zero indicates
-    # no ratings yet for this movie.
-    avg = self.ratings.average(:score).to_f
-    return nil if avg < 0.5
-    return avg
+  def category_id=(new_id)
+    @category_object = Category.new(new_id.to_i)
+    super # sets the actual category_id attribute of the movie
   end
   
-  def dynamical_score_class
-    avg = average_score
-    return ( avg.nil? ? nil : avg.round )
-  end
-  
-  # With score_class we mean the rounded average rating between 1 and 5 (or nil for no ratings)
+  # With 'score class' we mean the rounded average rating between 1 and 5 (or nil for no ratings)
   # The fn. dynamical_score_class calculates the current value, but to be able to search for
   # this value efficiently, we need to store the consolidated integer value in the database.
   # Effectively this also serves as a caching mechanism, which would be needed anyway as the
   # database grows.
-  def bring_score_class_up_to_date
+  def dynamical_score_class
+    avg = dynamical_average_score
+    return nil if avg.nil?
+    return avg.round
+  end
+  
+  def bring_score_class_up_to_date!
     score_class_right_now = self.dynamical_score_class
     if score_class_right_now != self.score_class
       logger.debug("Updating score class of Movie '#{title}' to: #{score_class_right_now}")
@@ -54,6 +52,7 @@ class Movie < ActiveRecord::Base
     end
   end
   
+  # Perform elasticsearch query
   def self.search(contains_string="", in_year=-1, in_category=-1, in_score_class=-1, page=0)
     tire.search(:load => true) do
       size 10 # Limit number of records retrieved
@@ -65,41 +64,7 @@ class Movie < ActiveRecord::Base
       c = in_category.to_i
       s = in_score_class.to_i
       
-      # Look for query string
-      # unless t.blank?
-      #   query do
-      #     string t
-      #     match :year, y
-      #   end
-      # end
-      
-      # query do
-      #   filtered do
-      #     unless t.blank?
-      #       query do
-      #         string t
-      #       end
-      #     end
-      #     filter :query, :match => {:year => y}         if y > 0
-      #     filter :query, :match => {:category_id => c}  if c >= 0
-      #     filter :query, :match => {:score_class => s}  if s > 0
-      #   end
-      # end
-      
-      # http://stackoverflow.com/questions/9895941/facet-troubles-with-elasticsearch-on-query?rq=1
-      # query do
-      #   boolean do
-      #     must { string t } unless t.blank?
-      #     # unless t.blank?
-      #     #   must { string t } # unless t.blank?
-      #     # end
-      #     # must { string "" }
-      #     must { terms :year, y } if y > 0
-      #     must { terms :category_id, c } if c >= 0
-      #     must { terms :score_class, s } if s > 0
-      #   end
-      # end
-      
+      # Perform query if anything was specified (otherwise, return all)
       unless t.blank? and y<=0 and c<0 and s<=0
         query do
           string(t) unless t.blank?
@@ -108,17 +73,6 @@ class Movie < ActiveRecord::Base
           match(:score_class, s) if s > 0
         end
       end
-      
-      # if y > 0
-      #   query do
-      #     match :year, y
-      #   end
-      # end
-      
-      # Apply filters to search query, if corresponding values were supplied
-      # filter :query, :match => {:year => y}         if y > 0
-      # filter :query, :match => {:category_id => c}  if c >= 0
-      # filter :query, :match => {:score_class => s}  if s > 0
       
       # Define facet counts that we are interested in for the front-end
       facet 'current_year' do
@@ -130,9 +84,7 @@ class Movie < ActiveRecord::Base
       facet 'current_score' do
         terms :score_class
       end
-      # facet 'filtered' do
-      #   filter :year, :year => y
-      # end
+      
     end
   end
   
@@ -156,5 +108,14 @@ class Movie < ActiveRecord::Base
       errors.add(:category_id, "is not a valid category")
     end
   end
-    
+  
+  def dynamical_average_score
+    # Since the ratings are between 1 and 5, and average of zero indicates
+    # no ratings yet for this movie.
+    avg = self.ratings.average(:score).to_f
+    # Return nil if no ratings are available for this movie
+    return nil if avg < 0.5
+    return avg
+  end
+  
 end

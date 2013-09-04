@@ -1,4 +1,5 @@
 class Category
+  # Category is a value object for the gernre of a movie. It is persisted only using the category_id object of a Movie object.
   
   attr_reader :index
   
@@ -23,8 +24,9 @@ class Category
   end
   
   def ==(other)
-    return self.to_s == other.to_s
+    return self.to_i == other.to_i
   end
+  
   
   private
   
