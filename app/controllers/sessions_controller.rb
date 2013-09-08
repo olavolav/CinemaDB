@@ -9,6 +9,9 @@ class SessionsController < ApplicationController
   def create
     user = User.find_by_email(params[:email])
     if user && user.authenticate(params[:password])
+      # First, reset session to protect agains session fixation attacks
+      # Reference: http://guides.rubyonrails.org/security.html#session-hijacking
+      reset_session
       session[:user_id] = user.id
       redirect_to :home #, :notice => "Logged in!"
     else
