@@ -8,7 +8,86 @@ LifeOfPi:
   category_id: 0
 
 StarWars:
-  title: "Star Wars - The Return of the Jelly Worm"
+  title: "Star Wars - The Jelly Worm"
+  year: 2013
+  description: "smd,fgb,dmbf dfb df, ,dxf"
+  image_url: ""
+  category_id: 2
+
+# The following are just copies to test pagination.
+
+StarWars2:
+  title: "Star Wars II - The Return of the Jelly Worm"
+  year: 2013
+  description: "smd,fgb,dmbf dfb df, ,dxf"
+  image_url: ""
+  category_id: 2
+
+StarWars3:
+  title: "Star Wars III - The Return of the Jelly Worm's Son"
+  year: 2013
+  description: "smd,fgb,dmbf dfb df, ,dxf"
+  image_url: ""
+  category_id: 2
+
+StarWars4:
+  title: "Star Wars IV - The Past of the Jelly Worm"
+  year: 2013
+  description: "smd,fgb,dmbf dfb df, ,dxf"
+  image_url: ""
+  category_id: 2
+
+StarWars5:
+  title: "Star Wars V - Jelly Worm and the Monster Trucks"
+  year: 2013
+  description: "smd,fgb,dmbf dfb df, ,dxf"
+  image_url: ""
+  category_id: 2
+
+StarWars6:
+  title: "Star Wars VI - Jelly the Hutt"
+  year: 2013
+  description: "smd,fgb,dmbf dfb df, ,dxf"
+  image_url: ""
+  category_id: 2
+
+StarWars7:
+  title: "Star Wars VII - The Worms Strike Once More"
+  year: 2013
+  description: "smd,fgb,dmbf dfb df, ,dxf"
+  image_url: ""
+  category_id: 2
+
+StarWars8:
+  title: "Star Wars VIII - The One with Jar-Jar Binks"
+  year: 2013
+  description: "smd,fgb,dmbf dfb df, ,dxf"
+  image_url: ""
+  category_id: 2
+
+StarWars9:
+  title: "Star Wars IX - The Future of the Empire"
+  year: 2013
+  description: "smd,fgb,dmbf dfb df, ,dxf"
+  image_url: ""
+  category_id: 2
+
+StarWars10:
+  title: "Star Wars X - The Next Generation"
+  year: 2013
+  description: "smd,fgb,dmbf dfb df, ,dxf"
+  image_url: ""
+  category_id: 2
+
+StarWars11:
+  title: "Star Wars XI - Into Rather Dark Darkness"
+  year: 2013
+  description: "smd,fgb,dmbf dfb df, ,dxf"
+  image_url: ""
+  category_id: 2
+
+StarWars12:
+  title: "Star Wars XII - Now It Gets Incredibly Dark, Alsmost Black Really"
   year: 2013
   description: "smd,fgb,dmbf dfb df, ,dxf"
   image_url: ""
