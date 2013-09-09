@@ -9,12 +9,13 @@
   padding: 10px;
   background-color: #f5f5f5;
   border-radius: 0px 0px 5px 5px;
+  background-image: url('filter-background.gif');
+  background-position: top right;
 }
 
 .filter_group {
   width: auto;
   display: inline;
-  border: 1px solid red;
 }
 
 .filter {
@@ -63,14 +64,16 @@
    http://css-tricks.com/star-ratings/
 */
 .movie_score {
+  color: #999;
   unicode-bidi: bidi-override;
   direction: rtl;
   text-align: left;
+  font-size: 16px !important;
   
   > span {
     display: inline-block;
     position: relative;
-    width: 1.1em;
+    width: 16px;
     cursor: pointer;
   }
 }
