@@ -1,9 +1,16 @@
 class Category
-  # Category is a value object for the gernre of a movie. It is persisted only using the category_id object of a Movie object.
+  # Category is a value object for the gernre of a movie. It is persisted only using
+  # the category_id object of a Movie object.
   
   attr_reader :index
   
   def initialize(i)
+    # We will accept invalid arguments here and only test the index when validating
+    # the associated Movie object to mirror ActiveRecord behavior for persisted
+    # objects.
+    # unless Category.possible_category_ids.include? i.to_i
+    #   raise ArgumentError, "#{i} is an invalid category."
+    # end
     @index = i.to_i
   end
   

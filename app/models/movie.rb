@@ -23,8 +23,15 @@ class Movie < ActiveRecord::Base
   validate :category_is_valid?
   
   
+  # In the next three methods we make sure that we can use both the category as well as
+  # the category_id object as expected, i.e. that changing one changes the other and that
+  # the setters work correctly.
   def category
     return ( @category_object ||= Category.new(category_id) )
+  end
+  
+  def category=(new_cat)
+    self.category_id = new_cat.to_i
   end
   
   def category_id=(new_id)
