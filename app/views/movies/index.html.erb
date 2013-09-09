@@ -81,36 +81,19 @@
   // Add category filter
   filters.add( new app.Filter({
     'query_key': 'category',
-    'labels': [
-      {'name': 'All genres', 'value': -1},
-      {'name': 'Action', 'value': 0},
-      {'name': 'Drama', 'value': 1},
-      {'name': 'Fantasy/Sci-Fi', 'value': 2},
-      {'name': 'Comedy', 'value': 3},
-      {'name': 'Horror', 'value': 4}
-    ]
+    'labels': [ <%= category_filter_list_JS %> ]
     })
   );
   // Add filter according to year of release
   filters.add( new app.Filter({
     'query_key': 'year',
-    'labels': [
-      {'name': 'All years', 'value': -1},
-      {'name': '2011', 'value': 2011},
-      {'name': '2012', 'value': 2012},
-      {'name': '2013', 'value': 2013}
-    ]
+    'labels': [ <%= years_filter_list_JS(2011, 2013) %> ]
     })
   );
   // Add filter according to score class
   filters.add( new app.Filter({
     'query_key': 'score',
-    'labels': [
-      {'name': 'All scores', 'value': -1},
-      {'name': '3 stars', 'value': 3},
-      {'name': '4 stars', 'value': 4},
-      {'name': '5 stars', 'value': 5}
-    ]
+    'labels': [ <%= scores_filter_list_JS(3, 5) %> ]
     })
   );
   var PageBar = new app.PaginatorView();
