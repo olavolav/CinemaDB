@@ -2,7 +2,8 @@
 
 Prototype application for movie listing and ratings.
 
-![Screenshot of main movie listing page](https://github.com/olavolav/CinemaDB/raw/master/screenshot.jpg)
+![Screenshot of main movie listing page](https://github.com/olavolav/CinemaDB/raw/master/screenshot.png)
+
 
 ## Dependencies
 
